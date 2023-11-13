@@ -1,9 +1,9 @@
 /**
- * Selectors
+ * Variables
  */
-
-const gameContainer = document.getElementById('game');
-const settingsForm = document.querySelector('form');
+const gameContainer = document.querySelector('.game-container');
+const settingsForm = document.querySelector('.settings');
+const activeCards = [];
 
 /**
  * Methods
@@ -81,22 +81,72 @@ function createCardElements(gameData) {
     card.className = 'card card--face-down';
     card.dataset.match = item.match;
 
-    const text = document.createElement('p');
-    text.innerText = item.text;
-    card.append(text);
+    const cardText = document.createElement('p');
+    cardText.classList.add('card__text');
+    cardText.innerText = item.text;
+    card.append(cardText);
+
     gameContainer.append(card);
   }
 }
 
-// TODO: Implement this function!
+/**
+ * Takes click event inside .game-container and runs it through the following logic:
+ *
+ * 1. Ignore clicks that are not on cards. (i.e in the space between cards)
+ *
+ * 2. A max of two cards can be active at any given moment.
+ *
+ * 3. A single card can not be counted as active twice (i.e. ignore duplicate clicks)
+ *
+ * 4. If #2 & #3 conditions are not broken, flip the card and add it to activeCards
+ *
+ * 5. If two cards are active, check if they match.
+ * @param {PointerEvent} event Event containing data from Click Event inside game-container.
+ */
 function handleCardClick(event) {
-  // you can use event.target to see which element was clicked
-  event.target.classList.toggle('card--face-down');
+  console.log(activeCards);
+  // Ignoring clicks that don't occur on cards
+  if (event.target.className !== 'game-container') {
+    const card = event.target;
+
+    switch (activeCards.length) {
+      case 0:
+        card.classList.toggle('card--face-down');
+        activeCards.push(card);
+        break;
+      case 1:
+        if (activeCards[0].innerText !== card.innerText) {
+          card.classList.toggle('card--face-down');
+          activeCards.push(card);
+          setTimeout(calculateMatch, 1000);
+        }
+        break;
+    }
+  }
+}
+
+/**
+ * Checks if the two active cards match, updates their card--face-down class accordingly, and removes the cards from the activeCards array.
+ */
+function calculateMatch() {
+  let firstValue = activeCards[0].innerText;
+  let secondMatch = activeCards[1].dataset.match;
+
+  // If firstValue === secondMatch, then secondValue === firstMatch
+  // so the inverse check is omitted.
+  if (firstValue === secondMatch) {
+  } else {
+    for (card of activeCards) {
+      card.classList.toggle('card--face-down');
+    }
+  }
+  // clear activeCards
+  activeCards.length = 0;
 }
 
 /**
  * Events
  **/
-
 settingsForm.addEventListener('submit', configureGame);
 gameContainer.addEventListener('click', handleCardClick);

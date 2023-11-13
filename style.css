@@ -7,6 +7,11 @@
   display: inline-block;
 }
 
-.card--face-down p {
+.card--face-down .card__text {
   visibility: hidden;
+}
+
+.card__text {
+  pointer-events: none;
+  cursor: default;
 }
