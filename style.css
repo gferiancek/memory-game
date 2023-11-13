@@ -1,7 +1,12 @@
-#game div {
+.card {
   border: 1px solid black;
   width: 15%;
   height: 200px;
   margin: 10px;
+  color: black;
   display: inline-block;
+}
+
+.card--face-down p {
+  visibility: hidden;
 }
