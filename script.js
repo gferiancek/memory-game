@@ -1,8 +1,31 @@
+/**
+ * Selectors
+ */
+
 const gameContainer = document.getElementById('game');
+const settingsForm = document.querySelector('form');
+
+/**
+ * Methods
+ */
+/**
+ * Fires upon user hitting the 'Start' button. Reads user input, grabs the correct SRC and DIFFICULTY from const.js, and starts a new round of the game.
+ * @param {SubmitEvent} event Event containing the data from the settings form.
+ */
+function configureGame(event) {
+  event.preventDefault();
+
+  // Getting value of checked radio buttons
+  let src = document.querySelector('input[name="src"]:checked').value;
+  let difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+
+  let gameData = generateGameData(SRC_SETTINGS[src], DIFFICULTY_SETTINGS[difficulty]);
+  createCardElements(gameData);
+}
 
 /**
  * Generates a list of gameData in the format of {text, match}.
- * @param {Array} src Determines which list we will use, either HIRAGANA or KATAKANA, from kana.js.
+ * @param {Array} src Determines which list we will use, either HIRAGANA or KATAKANA, from const.js.
  * @param {Number} batchSize Determines how many items will be pulled from src.
  * @returns {Array} Shuffled list of items to be used in current round of the game.
  */
@@ -65,19 +88,15 @@ function createCardElements(gameData) {
   }
 }
 
-gameContainer.addEventListener('click', handleCardClick);
-
 // TODO: Implement this function!
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
-  console.log('you just clicked', event.target);
+  event.target.classList.toggle('card--face-down');
 }
 
-// TODO: Generate based on user input
-let batchSize = 5;
+/**
+ * Events
+ **/
 
-// TODO: Select from HIRAGANA or KATAKANA based on user input.
-let src = HIRAGANA;
-
-// when the DOM loads
-createCardElements(generateGameData(src, batchSize));
+settingsForm.addEventListener('submit', configureGame);
+gameContainer.addEventListener('click', handleCardClick);

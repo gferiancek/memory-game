@@ -1,3 +1,4 @@
+// All Hiragana characters and their EN equivalent, excluding combination sounds.
 const HIRAGANA = [
   { jp: 'あ', en: 'a' },
   { jp: 'い', en: 'e' },
@@ -72,6 +73,7 @@ const HIRAGANA = [
   { jp: 'ぽ', en: 'po' },
 ];
 
+// All Katakana characters and their EN equivalent, excluding combination sounds.
 const KATAKANA = [
   { jp: 'ア', en: 'a' },
   { jp: 'イ', en: 'e' },
@@ -145,3 +147,16 @@ const KATAKANA = [
   { jp: 'ペ', en: 'pe' },
   { jp: 'ポ', en: 'po' },
 ];
+
+// Src determines which list to use for the game.
+const SRC_SETTINGS = {
+  hiragana: HIRAGANA,
+  katakana: KATAKANA,
+};
+
+// Difficulty determines the # of pairs in the game.
+const DIFFICULTY_SETTINGS = {
+  easy: 6,
+  medium: 8,
+  hard: 12,
+};
