@@ -1,9 +1,14 @@
 /**
  * Variables
  */
-const gameContainer = document.querySelector('.game-container');
+const gameContainer = document.querySelector('.game');
 const settingsForm = document.querySelector('.settings');
 const activeCards = [];
+let totalMatches;
+let currentMatches;
+let moves;
+// TODO: Implement localStorage to save lowestMoves!
+let lowestMoves = -1;
 
 /**
  * Methods
@@ -12,15 +17,31 @@ const activeCards = [];
  * Fires upon user hitting the 'Start' button. Reads user input, grabs the correct SRC and DIFFICULTY from const.js, and starts a new round of the game.
  * @param {SubmitEvent} event Event containing the data from the settings form.
  */
-function configureGame(event) {
+function configureRound(event) {
   event.preventDefault();
+  initializeGame();
 
   // Getting value of checked radio buttons
   let src = document.querySelector('input[name="src"]:checked').value;
   let difficulty = document.querySelector('input[name="difficulty"]:checked').value;
 
-  let gameData = generateGameData(SRC_SETTINGS[src], DIFFICULTY_SETTINGS[difficulty]);
+  totalMatches = DIFFICULTY_SETTINGS[difficulty];
+  let gameData = generateGameData(SRC_SETTINGS[src], totalMatches);
   createCardElements(gameData);
+}
+
+/**
+ * Function that initializes the game to a default state.
+ */
+function initializeGame() {
+  totalMatches = 0;
+  currentMatches = 0;
+  moves = 0;
+  activeCards.length = 0;
+  // Used to remove '.game__results' if it is present.
+  if (gameContainer.hasChildNodes()) {
+    gameContainer.firstChild.remove();
+  }
 }
 
 /**
@@ -105,9 +126,8 @@ function createCardElements(gameData) {
  * @param {PointerEvent} event Event containing data from Click Event inside game-container.
  */
 function handleCardClick(event) {
-  console.log(activeCards);
   // Ignoring clicks that don't occur on cards
-  if (event.target.className !== 'game-container') {
+  if (event.target.className !== 'game') {
     const card = event.target;
 
     switch (activeCards.length) {
@@ -119,6 +139,7 @@ function handleCardClick(event) {
         if (activeCards[0].innerText !== card.innerText) {
           card.classList.toggle('card--face-down');
           activeCards.push(card);
+          moves++;
           setTimeout(calculateMatch, 1000);
         }
         break;
@@ -136,6 +157,10 @@ function calculateMatch() {
   // If firstValue === secondMatch, then secondValue === firstMatch
   // so the inverse check is omitted.
   if (firstValue === secondMatch) {
+    currentMatches++;
+    if (totalMatches === currentMatches) {
+      endGame();
+    }
   } else {
     for (card of activeCards) {
       card.classList.toggle('card--face-down');
@@ -146,7 +171,39 @@ function calculateMatch() {
 }
 
 /**
+ * Removes all cards and displays the game results to the screen.
+ */
+function endGame() {
+  while (gameContainer.lastChild) {
+    gameContainer.lastChild.remove();
+  }
+  gameContainer.append(generateResultsScreen());
+}
+
+/**
+ * Creates necessary elements for Results screen and populates with relevant data.
+ * @returns {HTMLDivElement} Div containing game over message, moves taken, lowest moves taken, and retry message.
+ */
+function generateResultsScreen() {
+  const results = document.createElement('div');
+  results.classList.add('game__results');
+
+  const message = document.createElement('p');
+  message.innerText = "Game Over. Here's how you did:";
+
+  const total = document.createElement('p');
+  total.innerText = `Moves Taken: ${moves}`;
+
+  const least = document.createElement('p');
+  least.innerText = `Lowest # of Moves Taken: ${lowestMoves}`;
+
+  const restart = document.createElement('p');
+  restart.innerText = 'Click start to try again!';
+
+  return results.append(message, total, least, restart);
+}
+/**
  * Events
  **/
-settingsForm.addEventListener('submit', configureGame);
+settingsForm.addEventListener('submit', configureRound);
 gameContainer.addEventListener('click', handleCardClick);
