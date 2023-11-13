@@ -4,11 +4,20 @@
 const gameContainer = document.querySelector('.game');
 const settingsForm = document.querySelector('.settings');
 const activeCards = [];
-let totalMatches;
+let difficulty;
 let currentMatches;
 let moves;
 // TODO: Implement localStorage to save lowestMoves!
-let lowestMoves = -1;
+let lowestMoves;
+if (localStorage.lowestMoves !== undefined) {
+  lowestMoves = JSON.parse(localStorage.lowestMoves);
+} else {
+  lowestMoves = {
+    easy: -1,
+    medium: -1,
+    hard: -1,
+  };
+}
 
 /**
  * Methods
@@ -23,10 +32,9 @@ function configureRound(event) {
 
   // Getting value of checked radio buttons
   let src = document.querySelector('input[name="src"]:checked').value;
-  let difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+  difficulty = document.querySelector('input[name="difficulty"]:checked').value;
 
-  totalMatches = DIFFICULTY_SETTINGS[difficulty];
-  let gameData = generateGameData(SRC_SETTINGS[src], totalMatches);
+  let gameData = generateGameData(SRC_SETTINGS[src], BATCH_SIZE[difficulty]);
   createCardElements(gameData);
 }
 
@@ -34,7 +42,7 @@ function configureRound(event) {
  * Function that initializes the game to a default state.
  */
 function initializeGame() {
-  totalMatches = 0;
+  difficulty = '';
   currentMatches = 0;
   moves = 0;
   activeCards.length = 0;
@@ -158,7 +166,7 @@ function calculateMatch() {
   // so the inverse check is omitted.
   if (firstValue === secondMatch) {
     currentMatches++;
-    if (totalMatches === currentMatches) {
+    if (BATCH_SIZE[difficulty] === currentMatches) {
       endGame();
     }
   } else {
@@ -177,7 +185,18 @@ function endGame() {
   while (gameContainer.lastChild) {
     gameContainer.lastChild.remove();
   }
+  saveResults();
   gameContainer.append(generateResultsScreen());
+}
+
+/**
+ * Checks if moves is a new record, and if so, saves moves into localStorage for the current difficulty.
+ */
+function saveResults() {
+  if (lowestMoves[difficulty] === -1 || moves < lowestMoves[difficulty]) {
+    lowestMoves[difficulty] = moves;
+    localStorage.lowestMoves = JSON.stringify(lowestMoves);
+  }
 }
 
 /**
@@ -195,12 +214,13 @@ function generateResultsScreen() {
   total.innerText = `Moves Taken: ${moves}`;
 
   const least = document.createElement('p');
-  least.innerText = `Lowest # of Moves Taken: ${lowestMoves}`;
+  least.innerText = `Lowest # of Moves Taken: ${lowestMoves[difficulty]}`;
 
   const restart = document.createElement('p');
   restart.innerText = 'Click start to try again!';
 
-  return results.append(message, total, least, restart);
+  results.append(message, total, least, restart);
+  return results;
 }
 /**
  * Events

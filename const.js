@@ -155,7 +155,7 @@ const SRC_SETTINGS = {
 };
 
 // Difficulty determines the # of pairs in the game.
-const DIFFICULTY_SETTINGS = {
+const BATCH_SIZE = {
   easy: 6,
   medium: 8,
   hard: 12,
