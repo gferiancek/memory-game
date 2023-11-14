@@ -158,5 +158,5 @@ const SRC_SETTINGS = {
 const BATCH_SIZE = {
   easy: 6,
   medium: 8,
-  hard: 12,
+  hard: 10,
 };

@@ -6,37 +6,32 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Memory Game!</h1>
-    <form class="settings">
-      <fieldset class="settings__kana-fieldset">
-        <legend>Select Kana type:</legend>
-        <div>
+    <div class="menu">
+      <h1 class="menu__title">Kana Match</h1>
+      <form class="settings">
+        <fieldset class="settings__fieldset">
+          <legend>Select Kana type:</legend>
           <input type="radio" id="hiragana" name="src" value="hiragana" checked />
           <label for="hiragana">Hiragana</label>
-        </div>
-        <div>
           <input type="radio" id="katakana" name="src" value="katakana" />
           <label for="katakana">Katakana</label>
-        </div>
-      </fieldset>
-      <fieldset class="settings__difficulty-fieldset">
-        <legend>Select Difficulty:</legend>
-        <div>
+        </fieldset>
+        <fieldset class="settings__fieldset">
+          <legend>Select Difficulty:</legend>
           <input type="radio" id="easy" name="difficulty" value="easy" checked />
           <label for="easy">Easy</label>
-        </div>
-        <div>
           <input type="radio" id="medium" name="difficulty" value="medium" />
           <label for="medium">Medium</label>
-        </div>
-        <div>
           <input type="radio" id="hard" name="difficulty" value="hard" />
           <label for="hard">Hard</label>
-        </div>
-      </fieldset>
-      <button class="settings__submit-btn" id="start">Start</button>
-    </form>
+        </fieldset>
+        <button class="settings__submit-btn" id="start">Start</button>
+      </form>
+    </div>
     <div class="game"></div>
+    <div class="vector-credits">
+      <a href="https://www.vecteezy.com/free-vector/mt-fuji">Mt Fuji Vectors by Vecteezy<a>
+    </div>
     <script src="const.js"></script>
     <script src="script.js"></script>
   </body>

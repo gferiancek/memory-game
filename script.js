@@ -47,7 +47,7 @@ function initializeGame() {
   moves = 0;
   activeCards.length = 0;
   // Used to remove '.game__results' if it is present.
-  if (gameContainer.hasChildNodes()) {
+  while (gameContainer.hasChildNodes()) {
     gameContainer.firstChild.remove();
   }
 }
@@ -107,13 +107,17 @@ function createCardElements(gameData) {
   // both what it's own data is and what its match is.
   for (let item of gameData) {
     const card = document.createElement('div');
-    card.className = 'card card--face-down';
+    card.className = 'card';
     card.dataset.match = item.match;
 
-    const cardText = document.createElement('p');
-    cardText.classList.add('card__text');
-    cardText.innerText = item.text;
-    card.append(cardText);
+    const front = document.createElement('div');
+    front.classList.add('card__front');
+    front.innerText = item.text;
+
+    const back = document.createElement('div');
+    back.classList.add('card__back');
+
+    card.append(front, back);
 
     gameContainer.append(card);
   }
@@ -140,12 +144,12 @@ function handleCardClick(event) {
 
     switch (activeCards.length) {
       case 0:
-        card.classList.toggle('card--face-down');
+        card.classList.toggle('card--flipped');
         activeCards.push(card);
         break;
       case 1:
         if (activeCards[0].innerText !== card.innerText) {
-          card.classList.toggle('card--face-down');
+          card.classList.toggle('card--flipped');
           activeCards.push(card);
           moves++;
           setTimeout(calculateMatch, 1000);
@@ -171,7 +175,7 @@ function calculateMatch() {
     }
   } else {
     for (card of activeCards) {
-      card.classList.toggle('card--face-down');
+      card.classList.toggle('card--flipped');
     }
   }
   // clear activeCards
@@ -201,27 +205,28 @@ function saveResults() {
 
 /**
  * Creates necessary elements for Results screen and populates with relevant data.
- * @returns {HTMLDivElement} Div containing game over message, moves taken, lowest moves taken, and retry message.
+ * @returns {HTMLDivElement} Div containing game over message, difficulty played, moves taken, and lowest moves taken.
  */
 function generateResultsScreen() {
   const results = document.createElement('div');
   results.classList.add('game__results');
 
-  const message = document.createElement('p');
-  message.innerText = "Game Over. Here's how you did:";
+  const msgElement = document.createElement('p');
+  msgElement.innerText = "You win!\nHere's how you did:";
 
-  const total = document.createElement('p');
-  total.innerText = `Moves Taken: ${moves}`;
+  const difficultyElement = document.createElement('p');
+  difficultyElement.innerText = `Difficulty:\n${difficulty}`;
 
-  const least = document.createElement('p');
-  least.innerText = `Lowest # of Moves Taken: ${lowestMoves[difficulty]}`;
+  const totalElement = document.createElement('p');
+  totalElement.innerText = `Moves Taken:\n${moves}`;
 
-  const restart = document.createElement('p');
-  restart.innerText = 'Click start to try again!';
+  const lowestElement = document.createElement('P');
+  lowestElement.innerText = `Lowest # of Moves Taken:\n${lowestMoves[difficulty]}`;
 
-  results.append(message, total, least, restart);
+  results.append(msgElement, difficultyElement, totalElement, lowestElement);
   return results;
 }
+
 /**
  * Events
  **/
