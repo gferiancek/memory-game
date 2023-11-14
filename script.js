@@ -139,7 +139,7 @@ function createCardElements(gameData) {
  */
 function handleCardClick(event) {
   // Ignoring clicks that don't occur on cards
-  if (event.target.className !== 'game') {
+  if (event.target.className === 'card') {
     const card = event.target;
 
     switch (activeCards.length) {
