@@ -1,7 +1,7 @@
 // All Hiragana characters and their EN equivalent, excluding combination sounds.
 const HIRAGANA = [
   { jp: 'あ', en: 'a' },
-  { jp: 'い', en: 'e' },
+  { jp: 'い', en: 'i' },
   { jp: 'う', en: 'u' },
   { jp: 'え', en: 'e' },
   { jp: 'お', en: 'o' },
@@ -76,7 +76,7 @@ const HIRAGANA = [
 // All Katakana characters and their EN equivalent, excluding combination sounds.
 const KATAKANA = [
   { jp: 'ア', en: 'a' },
-  { jp: 'イ', en: 'e' },
+  { jp: 'イ', en: 'i' },
   { jp: 'ウ', en: 'u' },
   { jp: 'エ', en: 'e' },
   { jp: 'オ', en: 'o' },
